@@ -1,0 +1,7 @@
+ALTER TABLE public.dater_profiles ADD COLUMN is_published boolean NOT NULL DEFAULT false;
+ALTER TABLE public.dater_profiles ADD CONSTRAINT published_profile_complete CHECK (NOT is_published OR (char_length(btrim(name)) > 0 AND char_length(btrim(city)) > 0 AND char_length(btrim(bio)) >= 20 AND cardinality(interests) >= 3 AND cardinality(photos) BETWEEN 1 AND 6));
+CREATE FUNCTION public.validate_published_profile_photos() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.is_published AND EXISTS (SELECT 1 FROM unnest(NEW.photos) AS photo WHERE photo IS NULL OR photo NOT LIKE NEW.user_id::text || '/%') THEN RAISE EXCEPTION 'Published photos must belong to the profile owner'; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER validate_published_profile_photos BEFORE INSERT OR UPDATE ON public.dater_profiles FOR EACH ROW EXECUTE FUNCTION public.validate_published_profile_photos();
+CREATE POLICY "Published profiles read" ON public.dater_profiles FOR SELECT TO authenticated USING (is_published = true);
+CREATE POLICY "Published profile photos read" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'dater-photos' AND EXISTS (SELECT 1 FROM public.dater_profiles AS profile WHERE profile.is_published = true AND storage.objects.name = ANY(profile.photos)));
+COMMENT ON COLUMN public.dater_profiles.is_published IS 'Owner opt-in to signed-in discovery; existing profiles remain private by default.';

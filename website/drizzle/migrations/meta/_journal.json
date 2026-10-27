@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792373834853,
+      "tag": "0000_icebreaker_gateway_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792468003694,
+      "tag": "0001_cloud_match_chats",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792550833635,
+      "tag": "0002_dater_profiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792747190228,
+      "tag": "0003_opt_in_profile_discovery",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792815648126,
+      "tag": "0004_drop_published_photo_read_policy",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Published profile photos read" ON storage.objects;
